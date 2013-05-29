@@ -16,7 +16,7 @@ import subprocess
 def main():
     """Main function"""
     if(len(sys.argv) < 3):
-        sys.exit("Missing arguments...")
+        sys.exit("Error: please specify input and output files to use..")
     else:
         infile = sys.argv[1]
         outfile = sys.argv[2]
@@ -27,9 +27,14 @@ def main():
     # 2 = Other code block
     _MODE_ = 0
 
-    # output
+    # check output file
     if os.path.exists(outfile):
-        sys.exit("Output file exists!")
+        x = None
+
+        while x not in ["y", "n", ""]:
+            x = input("Specified output file exists. Overwrite? [Y/n] ").lower()
+        if x == 'n':
+            sys.exit()
 
     outfile = open(outfile, 'w')
 
