@@ -1,9 +1,0 @@
-Markdown test
-=============
-Some normal text.
-
-```{bash}
-echo Hello world!
-ls -p
-```
-Some *more* text.

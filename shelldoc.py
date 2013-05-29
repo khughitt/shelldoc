@@ -9,6 +9,7 @@ Examples
 shelldoc.py input.smd output.md
 """
 import os
+import re
 import sys
 import subprocess
 
@@ -23,6 +24,7 @@ def main():
     # Modes
     # 0 = Markdown
     # 1 = Shellscript
+    # 2 = Other code block
     _MODE_ = 0
 
     # output
@@ -35,17 +37,31 @@ def main():
         cmds = []
 
         # start shell block
-        if line.startswith('```{bash'):
-            _MODE_ = 1
-            continue
+        if line.startswith('```{'):
+            # detect language
+            parts = re.match(r'```\{(\w*)([^\}]*)\}', line).groups()
+            lang = parts[0]
+
+            # shell
+            if lang == 'bash':
+                _MODE_ = 1
+                continue
+            # other
+            else:
+                _MODE_ = 2
+                outfile.write('```%s\n' % lang)
+                continue
+
         # end shell block
         elif line.startswith('```\n'):
             # @TODO: loosen immediate newline constraint
+            if _MODE_ == 2:
+                outfile.write('```\n')
             _MODE_ = 0
             continue
 
         # text
-        if _MODE_ == 0:
+        if _MODE_ != 1:
             outfile.write(line)
         # shell command
         else:
