@@ -11,12 +11,18 @@ shelldoc.py input.smd output.md
 import os
 import re
 import sys
+import argparse
 import subprocess
 
 def main():
     """Main function"""
+    parser = _parse_args()
+
     if(len(sys.argv) < 3):
-        sys.exit("Error: please specify input and output files to use..")
+        _print_greeting()
+        parser.print_help()
+        print("\nFor more information, see: https://www.github.com/khughitt/shelldoc\n")
+        sys.exit()
     else:
         infile = sys.argv[1]
         outfile = sys.argv[2]
@@ -91,6 +97,25 @@ def main():
             out = out.replace('\n', '\n# ')[:-2]
             outfile.write("# %s" % out)
             outfile.write('```\n\n')
+
+def _parse_args():
+    """Parse input arguments"""
+    desc = "Shell script report generator inspired by knitr"
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument('input_file', help='source file')
+    parser.add_argument('output_file', nargs='?', help='destionation file')
+    return parser
+
+def _print_greeting():
+    """Display banner and greeting message."""
+    print(
+"""     _          _ _     _
+ ___| |__   ___| | | __| | ___   ___
+/ __| '_ \ / _ \ | |/ _` |/ _ \ / __|
+\__ \ | | |  __/ | | (_| | (_) | (__ 
+|___/_| |_|\___|_|_|\__,_|\___/ \___|
+
+""")
 
 if __name__ == "__main__":
     main()
